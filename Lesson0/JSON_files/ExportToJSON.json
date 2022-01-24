@@ -1,0 +1,83 @@
+[
+  {
+    "factoryJSON": [
+      {
+        "unitJSON": [
+          {
+            "tank": [
+              {
+                "Id": 1,
+                "Name": "Резервуар 1",
+                "Volume": 1500,
+                "MaxVolume": 2000,
+                "UnitId": 1
+              },
+              {
+                "Id": 2,
+                "Name": "Резервуар 2",
+                "Volume": 2500,
+                "MaxVolume": 3000,
+                "UnitId": 1
+              }
+            ],
+            "Id": 1,
+            "Name": "ГФУ",
+            "FactoryId": 1
+          },
+          {
+            "tank": [
+              {
+                "Id": 3,
+                "Name": "Дополнительный резервуар 24",
+                "Volume": 3000,
+                "MaxVolume": 3000,
+                "UnitId": 2
+              },
+              {
+                "Id": 4,
+                "Name": "Резервуар 35",
+                "Volume": 3000,
+                "MaxVolume": 3000,
+                "UnitId": 2
+              },
+              {
+                "Id": 5,
+                "Name": "Резервуар 47",
+                "Volume": 4000,
+                "MaxVolume": 5000,
+                "UnitId": 2
+              }
+            ],
+            "Id": 2,
+            "Name": "АВТ-6",
+            "FactoryId": 1
+          }
+        ],
+        "Id": 1,
+        "Name": "НПЗ#1",
+        "Description": "Первый нефтеперерабатывающий завод"
+      },
+      {
+        "unitJSON": [
+          {
+            "tank": [
+              {
+                "Id": 6,
+                "Name": "Резервуар 256",
+                "Volume": 500,
+                "MaxVolume": 500,
+                "UnitId": 3
+              }
+            ],
+            "Id": 3,
+            "Name": "АВТ-10",
+            "FactoryId": 2
+          }
+        ],
+        "Id": 2,
+        "Name": "НПЗ#2",
+        "Description": "Второй нефтеперерабатывающий завод"
+      }
+    ]
+  }
+]
