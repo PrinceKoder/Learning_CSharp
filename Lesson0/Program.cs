@@ -12,7 +12,8 @@ namespace Lesson0
 {
     class Program
     {
-        public static string jsFilesPath = @"D:\C#_Projects\Learning_Csharp\Lessons\Lesson0\JSON_files";    // правим под свои реалии, это папка для складирования и считывания JSON файлов
+        //public static string jsonFilesPath = @"D:\C#_Projects\Learning_Csharp\Lessons\Lesson0\JSON_files";    // правим под свои реалии, это папка для складирования и считывания JSON файлов
+        public static string jsonFilesPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "JSON_files"); // относительный путь в папку с билдом
         public static JsonSerializerOptions jsonSO = new JsonSerializerOptions()
         {
             WriteIndented = true,
@@ -21,7 +22,7 @@ namespace Lesson0
 
         static void Main(string[] args)
         {
-            PrepareJsonFiles();
+            //PrepareJsonFiles();
 
             var factories = GetFactories();
             var units = GetUnits();
@@ -36,10 +37,19 @@ namespace Lesson0
             Console.WriteLine($"Количество установок: {units.Length}.");
             Console.WriteLine($"Количество резервуаров: {tanks.Length}.");
 
-            var foundUnit = FindUnit(tanks, units, "Резервуар 2");
-            var factory = FindFactory(factories, foundUnit);
+            string tankName = "Резервуар 2";
+            var foundUnit = FindUnit(tanks, units, tankName);
+            if (foundUnit != null)
+            {
+                var factory = FindFactory(factories, foundUnit);
+                Console.WriteLine($"{tankName} принадлежит установке: {foundUnit.Name} и заводу: {factory?.Name}");
+            }
+            else
+            {
+                Console.WriteLine($"Не удалось найти установку с таким именем резервуара.");
+            }
 
-            Console.WriteLine($"Резервуар 2 принадлежит установке {foundUnit.Name} и заводу {factory.Name}");
+
 
             var totalVolume = GetTotalVolume(tanks);
             var usedVolume = GetUsedVolume(tanks);
@@ -57,10 +67,10 @@ namespace Lesson0
         {
             // ваш код здесь
             List<Tank> tankList = new List<Tank>();
-            foreach (string jsString in Directory.GetFiles(jsFilesPath, "tank*"))
+            foreach (string jsonFilePath in Directory.GetFiles(jsonFilesPath, "tank*"))
             {
                 tankList.Add(
-                    JsonSerializer.Deserialize<Tank>(File.ReadAllText(jsString))
+                    JsonSerializer.Deserialize<Tank>(File.ReadAllText(jsonFilePath))
                     );
             }
             return tankList.ToArray();
@@ -72,10 +82,10 @@ namespace Lesson0
         {
             // ваш код здесь
             List<Unit> unitList = new List<Unit>();
-            foreach (string jsString in Directory.GetFiles(jsFilesPath, "unit*"))
+            foreach (string jsonFilePath in Directory.GetFiles(jsonFilesPath, "unit*"))
             {
                 unitList.Add(
-                    JsonSerializer.Deserialize<Unit>(File.ReadAllText(jsString))
+                    JsonSerializer.Deserialize<Unit>(File.ReadAllText(jsonFilePath))
                     );
             }
             return unitList.ToArray();
@@ -87,10 +97,10 @@ namespace Lesson0
         {
             // ваш код здесь
             List<Factory> factoryList = new List<Factory>();
-            foreach (string jsString in Directory.GetFiles(jsFilesPath, "factory*"))
+            foreach (string jsonFilePath in Directory.GetFiles(jsonFilesPath, "factory*"))
             {
                 factoryList.Add(
-                    JsonSerializer.Deserialize<Factory>(File.ReadAllText(jsString))
+                    JsonSerializer.Deserialize<Factory>(File.ReadAllText(jsonFilePath))
                     );
             }
             return factoryList.ToArray();
@@ -102,8 +112,8 @@ namespace Lesson0
         public static Unit FindUnit(Tank[] tanks, Unit[] units, string tankName)
         {
             // ваш код здесь
-            Tank tank = tanks.FirstOrDefault(x => x.Name.ToUpper() == tankName.ToUpper());
-            return units.FirstOrDefault(x => x.Id == tank.UnitId);
+            Tank tank = tanks.FirstOrDefault(x => string.Equals(x.Name, tankName, StringComparison.OrdinalIgnoreCase));
+            return units.FirstOrDefault(x => x.Id == tank?.UnitId);
         }
 
         /// <summary>
@@ -166,9 +176,6 @@ namespace Lesson0
                 {
                     Console.WriteLine();
                     SelectEntityForSearching(units, factories, tanks);
-
-
-                    //FindTankByInput(tanks, Console.ReadLine());
                 }
                 else if (pressedKey == ConsoleKey.N)
                 {
@@ -193,7 +200,7 @@ namespace Lesson0
                 Console.WriteLine("Введите имя резервуара:");
                 string typedName = Console.ReadLine();
 
-                var tank = tanks.FirstOrDefault(x => x.Name.ToUpper() == typedName.ToUpper());
+                var tank = tanks.FirstOrDefault(x => string.Equals(x.Name, typedName,StringComparison.OrdinalIgnoreCase));
                 if (tank is null)
                 {
 
@@ -223,7 +230,7 @@ namespace Lesson0
             {
                 Console.WriteLine("Введите имя установки:");
                 string typedName = Console.ReadLine();
-                var unit = units.FirstOrDefault(x => x.Name.ToUpper() == typedName.ToUpper());
+                var unit = units.FirstOrDefault(x => string.Equals(x.Name, typedName, StringComparison.OrdinalIgnoreCase));
 
                 if (unit is null)
                 {
@@ -252,7 +259,7 @@ namespace Lesson0
             {
                 Console.WriteLine("Введите имя завода:");
                 string typedName = Console.ReadLine();
-                var factory = factories.FirstOrDefault(x => x.Name.ToUpper() == typedName.ToUpper());
+                var factory = factories.FirstOrDefault(x => string.Equals(x.Name, typedName, StringComparison.OrdinalIgnoreCase));
 
                 if (factory is null)
                 {
@@ -280,9 +287,8 @@ namespace Lesson0
             Unit = 2,
             Tank = 3
         }
-        public static bool SelectEntityForSearching(Unit[] units, Factory[] factories, Tank[] tanks)
-        {
-            bool res = false;
+        public static void SelectEntityForSearching(Unit[] units, Factory[] factories, Tank[] tanks)
+        {            
             while (true)
             {
                 Console.WriteLine();
@@ -296,41 +302,41 @@ namespace Lesson0
                 bool parseResult = Int32.TryParse(Console.ReadKey(true).KeyChar.ToString(), out selectedTypeNumber);
                 Console.WriteLine();
 
-                if (parseResult)
+                if (!parseResult)
+                {
+                    Console.WriteLine("Команда не распознана. Попробуйте ещё раз.");
+                    continue;
+                }
+                else
                 {
                     switch (selectedTypeNumber)
                     {
                         case (int)EntitiesForSearching.Factory:
-                            res = FindFactoryByInput(units, factories);
+                            FindFactoryByInput(units, factories);
                             break;
 
                         case (int)EntitiesForSearching.Unit:
-                            res = FindUnitByInput(units, factories);
+                            FindUnitByInput(units, factories);
                             break;
 
                         case (int)EntitiesForSearching.Tank:
-                            res = FindTankByInput(tanks);
+                            FindTankByInput(tanks);
                             break;
 
-                        case 0:
-                            res = true;
-                            break;
+                        case 0:                            
+                            Console.WriteLine("Выход в меню.");
+                            Console.WriteLine();
+                            return;
+                            
 
-                        default:
-                            res = false;
-                            Console.WriteLine("Команда не распознана. Попробуйте ещё раз.");
-                            break;
-                    }
-                    if (res)
-                        break;
-                }
-                else
-                {
-                    Console.WriteLine("Команда не распознана. Попробуйте ещё раз.");
+                        default:                           
+                            Console.WriteLine("Такого варианта нет. Попробуйте ещё раз.");
+                            continue;
+                            
+                    }                    
                 }
             }
-
-            return res;
+           
         }
 
         #endregion
@@ -366,7 +372,7 @@ namespace Lesson0
                     }).ToArray()
                 });
 
-                File.WriteAllText(Path.Combine(jsFilesPath, "ExportToJSON.json"), JsonSerializer.Serialize(export, jsonSO));
+                File.WriteAllText(Path.Combine(jsonFilesPath, "ExportToJSON.json"), JsonSerializer.Serialize(export, jsonSO));
                 res = true;
             }
             catch (Exception ex)
@@ -417,41 +423,41 @@ namespace Lesson0
 
             #region factory
             jsonString = JsonSerializer.Serialize(factory1, jsonSO);
-            File.WriteAllText(Path.Combine(jsFilesPath, "factory1.json"), jsonString);
+            File.WriteAllText(Path.Combine(jsonFilesPath, "factory1.json"), jsonString);
 
             jsonString = JsonSerializer.Serialize(factory2, jsonSO);
-            File.WriteAllText(Path.Combine(jsFilesPath, "factory2.json"), jsonString);
+            File.WriteAllText(Path.Combine(jsonFilesPath, "factory2.json"), jsonString);
             #endregion
 
             #region unit
             jsonString = JsonSerializer.Serialize(unit1, jsonSO);
-            File.WriteAllText(Path.Combine(jsFilesPath, "unit1.json"), jsonString);
+            File.WriteAllText(Path.Combine(jsonFilesPath, "unit1.json"), jsonString);
 
             jsonString = JsonSerializer.Serialize(unit2, jsonSO);
-            File.WriteAllText(Path.Combine(jsFilesPath, "unit2.json"), jsonString);
+            File.WriteAllText(Path.Combine(jsonFilesPath, "unit2.json"), jsonString);
 
             jsonString = JsonSerializer.Serialize(unit3, jsonSO);
-            File.WriteAllText(Path.Combine(jsFilesPath, "unit3.json"), jsonString);
+            File.WriteAllText(Path.Combine(jsonFilesPath, "unit3.json"), jsonString);
             #endregion
 
             #region tank
             jsonString = JsonSerializer.Serialize(tank1, jsonSO);
-            File.WriteAllText(Path.Combine(jsFilesPath, "tank1.json"), jsonString);
+            File.WriteAllText(Path.Combine(jsonFilesPath, "tank1.json"), jsonString);
 
             jsonString = JsonSerializer.Serialize(tank2, jsonSO);
-            File.WriteAllText(Path.Combine(jsFilesPath, "tank2.json"), jsonString);
+            File.WriteAllText(Path.Combine(jsonFilesPath, "tank2.json"), jsonString);
 
             jsonString = JsonSerializer.Serialize(tank3, jsonSO);
-            File.WriteAllText(Path.Combine(jsFilesPath, "tank3.json"), jsonString);
+            File.WriteAllText(Path.Combine(jsonFilesPath, "tank3.json"), jsonString);
 
             jsonString = JsonSerializer.Serialize(tank4, jsonSO);
-            File.WriteAllText(Path.Combine(jsFilesPath, "tank4.json"), jsonString);
+            File.WriteAllText(Path.Combine(jsonFilesPath, "tank4.json"), jsonString);
 
             jsonString = JsonSerializer.Serialize(tank5, jsonSO);
-            File.WriteAllText(Path.Combine(jsFilesPath, "tank5.json"), jsonString);
+            File.WriteAllText(Path.Combine(jsonFilesPath, "tank5.json"), jsonString);
 
             jsonString = JsonSerializer.Serialize(tank6, jsonSO);
-            File.WriteAllText(Path.Combine(jsFilesPath, "tank6.json"), jsonString);
+            File.WriteAllText(Path.Combine(jsonFilesPath, "tank6.json"), jsonString);
             #endregion
 
             #endregion
