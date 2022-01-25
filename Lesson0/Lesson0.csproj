@@ -1,0 +1,75 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net5.0</TargetFramework>
+    <ApplicationIcon />
+    <Win32Resource />
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="JSON_files\ExportToJSON.json" />
+    <None Remove="JSON_files\factory1.json" />
+    <None Remove="JSON_files\factory2.json" />
+    <None Remove="JSON_files\tank1.json" />
+    <None Remove="JSON_files\tank2.json" />
+    <None Remove="JSON_files\tank3.json" />
+    <None Remove="JSON_files\tank4.json" />
+    <None Remove="JSON_files\tank5.json" />
+    <None Remove="JSON_files\tank6.json" />
+    <None Remove="JSON_files\unit1.json" />
+    <None Remove="JSON_files\unit2.json" />
+    <None Remove="JSON_files\unit3.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="JSON_files\ExportToJSON.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="JSON_files\factory1.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="JSON_files\factory2.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="JSON_files\tank1.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="JSON_files\tank2.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="JSON_files\tank3.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="JSON_files\tank4.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="JSON_files\tank5.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="JSON_files\tank6.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="JSON_files\unit1.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="JSON_files\unit2.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="JSON_files\unit3.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Resource Include="JSON_files\factory1.json" />
+    <Resource Include="JSON_files\factory2.json" />
+    <Resource Include="JSON_files\tank1.json" />
+    <Resource Include="JSON_files\tank2.json" />
+    <Resource Include="JSON_files\tank3.json" />
+    <Resource Include="JSON_files\tank4.json" />
+    <Resource Include="JSON_files\tank5.json" />
+    <Resource Include="JSON_files\tank6.json" />
+    <Resource Include="JSON_files\unit1.json" />
+    <Resource Include="JSON_files\unit2.json" />
+    <Resource Include="JSON_files\unit3.json" />
+  </ItemGroup>
+
+</Project>
